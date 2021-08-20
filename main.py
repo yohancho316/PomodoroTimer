@@ -66,6 +66,7 @@ class Settings(ttk.Frame):
     for child in settings_container.winfo_children():
       child.grid_configure(padx=5,pady=5)
 
+# Timer Class Frame
 class Timer(ttk.Frame):
   def __init__(self,parent,controller):
     super().__init__(parent)
