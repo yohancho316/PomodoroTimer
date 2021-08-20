@@ -10,7 +10,7 @@ class PomodoroTimer(tk.Tk):
     self.title("John's Pomodoro Study Timer")
     self.columnconfigure(0,weight=1)
     self.rowconfigure(1,weight=1)
-    self.geometry('315x160')
+    self.geometry('320x180')
     self.resizable(True,True)
 
     # Pomodoro Class Variables
@@ -24,13 +24,27 @@ class PomodoroTimer(tk.Tk):
     container.grid()
     container.columnconfigure(0,weight=1)
 
+    self.frames = dict()
+
     # Timer Frame
-    # timer_frame = Timer(container,self)
-    # timer_frame.grid(row=0,column=0,sticky='NSEW')
+    timer_frame = Timer(container,self)
+    timer_frame.grid(row=0,column=0,sticky='NSEW')
 
     # Settings Frame
     settings_frame = Settings(container,self)
     settings_frame.grid(row=0,column=0,sticky='NSEW')
+
+    # Insert KVP into frames Dict
+    # Key: timer_frame / settings_frame class
+    # Value: timer_frame / settings_frame objects
+    self.frames[Timer] = timer_frame
+    self.frames[Settings] = settings_frame
+
+    self.show_frame(Timer)
+
+  def show_frame(self,container):
+    frame = self.frames[container]
+    frame.tkraise()
 
 # Settings Frame Class
 class Settings(ttk.Frame):
@@ -66,7 +80,7 @@ class Settings(ttk.Frame):
     for child in settings_container.winfo_children():
       child.grid_configure(padx=5,pady=5)
 
-# Timer Class Frame
+# Timer Frame Class
 class Timer(ttk.Frame):
   def __init__(self,parent,controller):
     super().__init__(parent)
