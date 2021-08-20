@@ -32,7 +32,7 @@ class PomodoroTimer(tk.Tk):
     settings_frame = Settings(container,self)
     settings_frame.grid(row=0,column=0,sticky='NSEW')
 
-
+# Settings Frame Class
 class Settings(ttk.Frame):
   def __init__(self,parent,controller):
     super().__init__(parent)
