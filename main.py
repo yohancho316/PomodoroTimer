@@ -10,7 +10,7 @@ class PomodoroTimer(tk.Tk):
     self.title("John's Pomodoro Study Timer")
     self.columnconfigure(0,weight=1)
     self.rowconfigure(1,weight=1)
-    self.geometry('320x180')
+    #self.geometry('380x210')
     self.resizable(True,True)
 
     # Pomodoro Class Variables
@@ -27,11 +27,11 @@ class PomodoroTimer(tk.Tk):
     self.frames = dict()
 
     # Timer Frame
-    timer_frame = Timer(container,self)
+    timer_frame = Timer(container,self,lambda:self.show_frame(Settings))
     timer_frame.grid(row=0,column=0,sticky='NSEW')
 
     # Settings Frame
-    settings_frame = Settings(container,self)
+    settings_frame = Settings(container,self,lambda:self.show_frame(Timer))
     settings_frame.grid(row=0,column=0,sticky='NSEW')
 
     # Insert KVP into frames Dict
@@ -48,14 +48,14 @@ class PomodoroTimer(tk.Tk):
 
 # Settings Frame Class
 class Settings(ttk.Frame):
-  def __init__(self,parent,controller):
+  def __init__(self,parent,controller,show_timer):
     super().__init__(parent)
 
     # Frame Widgets
     settings_container = ttk.Frame(self,padding='30 15 30 15',)
     settings_container.grid(row=0,column=0,padx=10,pady=10,sticky='EW')
     settings_container.columnconfigure(0,weight=1)
-    settings_container.rowconfigure(1,weight=1)
+    settings_container.rowconfigure(2,weight=1)
 
     # Label Widgets
     pomodoro_label = ttk.Label(settings_container,text='Pomodoro: ')
@@ -80,9 +80,16 @@ class Settings(ttk.Frame):
     for child in settings_container.winfo_children():
       child.grid_configure(padx=5,pady=5)
 
+    button_container = ttk.Frame(self)
+    button_container.grid(sticky='WE',padx=10)
+    button_container.columnconfigure(0,weight=1)
+
+    timer_button = ttk.Button(button_container,text='Back',command=show_timer,cursor='hand2')
+    timer_button.grid(row=0,column=0,sticky='EW',padx=2)
+
 # Timer Frame Class
 class Timer(ttk.Frame):
-  def __init__(self,parent,controller):
+  def __init__(self,parent,controller,show_settings):
     super().__init__(parent)
 
     # Timer Class Variables
@@ -96,14 +103,17 @@ class Timer(ttk.Frame):
     timer_description_label = ttk.Label(self,textvariable=self.current_timer_label)
     timer_description_label.grid(row=0,column=0,padx=(10,0),pady=(10,0),sticky='W')
 
+    settings_button = ttk.Button(self,text='Settings',command=show_settings,cursor='hand2')
+    settings_button.grid(row=0,column=1,sticky='E',padx=10,pady=(10,0))
+
     timer_frame = ttk.Frame(self,height='100')
-    timer_frame.grid(row=1,column=0,pady=(10,0),sticky='NSEW')
+    timer_frame.grid(row=1,column=0,columnspan=2,pady=(10,0),sticky='NSEW')
 
     timer_counter = ttk.Label(timer_frame,textvariable=self.current_time)
     timer_counter.place(relx=0.5,rely=0.5,anchor='center')
 
     button_container = ttk.Frame(self,padding=10)
-    button_container.grid(row=2,column=0,sticky='EW')
+    button_container.grid(row=2,column=0,columnspan=2,sticky='EW')
     button_container.columnconfigure((0,1,2),weight=1)
 
     self.start_button = ttk.Button(button_container,text='Start',state='enable',command=self.start_timer,cursor='hand2')
